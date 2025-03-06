@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WanderBook</string>
+    <string name="books_in_city">Books in city</string>
+    <string name="books_nearby">Books nearby</string>
+    <string name="my_library">My library</string>
+    <string name="profile">Profile</string>
+</resources>

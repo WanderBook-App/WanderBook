@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WanderBook</string>
+    <string name="books_in_city">Книги в городе</string>
+    <string name="books_nearby">Книги рядом</string>
+    <string name="my_library">Моя библиотека</string>
+    <string name="profile">Профиль</string>
+</resources>
