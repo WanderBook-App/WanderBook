@@ -2,11 +2,17 @@ package com.example.wanderbook.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.wanderbook.R
 
-// Set of Material typography styles to start with
+
+val Geologica = FontFamily(
+    Font(R.font.geologica_medium, FontWeight.Medium)
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,

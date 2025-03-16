@@ -19,17 +19,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.wanderbook.presentation.viewmodel.AuthViewModel
 
-
 @Composable
-fun LoginScreen(authViewModel: AuthViewModel, onLoginSuccess: () -> Unit) {
+fun RegistrationScreen(authViewModel: AuthViewModel, onRegisterSuccess: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    val isAuthenticated = authViewModel.isAuthenticated.value
-
-    if (isAuthenticated) {
-        onLoginSuccess()
-    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -48,10 +41,11 @@ fun LoginScreen(authViewModel: AuthViewModel, onLoginSuccess: () -> Unit) {
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { authViewModel.login(username, password) }) {
-            Text("Log In")
+        Button(onClick = {
+            authViewModel.login(username, password) // Заглушка: регистрация = вход
+            onRegisterSuccess()
+        }) {
+            Text("Register")
         }
     }
 }
-
-

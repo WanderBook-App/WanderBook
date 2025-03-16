@@ -3,21 +3,7 @@ package com.example.wanderbook.presentation.viewmodel
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
-/**
- * ViewModel, управляющая процессом аутентификации пользователя.
- *
- * Эта ViewModel отвечает за отслеживание состояния аутентификации пользователя.
- * Она проверяет, авторизован ли пользователь, и предоставляет методы для входа в систему.
- * Логика аутентификации (например, проверка в SharedPreferences) может быть добавлена в будущем.
- *
- * @property isAuthenticated Состояние, показывающее, авторизован ли пользователь.
- */
 
 class AuthViewModel : ViewModel() {
     private val _isAuthenticated = mutableStateOf(false)
