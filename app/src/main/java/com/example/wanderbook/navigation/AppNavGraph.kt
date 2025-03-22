@@ -64,7 +64,8 @@ fun AuthGraph(navController: NavHostController, authViewModel: AuthViewModel) {
 @Composable
 fun MainGraph(navController: NavHostController) {
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(navController) },
+        topBar = {  }
     ) { innerPadding ->
         NavHost(
             navController = navController,
