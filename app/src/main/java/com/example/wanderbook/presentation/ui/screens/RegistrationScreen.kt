@@ -22,7 +22,15 @@ import com.example.wanderbook.presentation.viewmodel.AuthViewModel
 @Composable
 fun RegistrationScreen(authViewModel: AuthViewModel, onRegisterSuccess: () -> Unit) {
     var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
+    val isRegistered = authViewModel.isRegistered.value
+
+    if (isRegistered) {
+        onRegisterSuccess()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -31,21 +39,35 @@ fun RegistrationScreen(authViewModel: AuthViewModel, onRegisterSuccess: () -> Un
         TextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") }
+            label = { Text("Придумайте логин") }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Введите почту") }
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Придумайте пароль") },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            authViewModel.login(username, password) // Заглушка: регистрация = вход
-            onRegisterSuccess()
+            authViewModel.register(username, email, password) { success ->
+                message = if (success) {
+                    onRegisterSuccess()
+                    "Регистрация успешна!"
+                } else {
+                    "Ошибка: email уже используется"
+                }
+            }
         }) {
-            Text("Register")
+            Text("Зарегистрироваться")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(message)
     }
 }
