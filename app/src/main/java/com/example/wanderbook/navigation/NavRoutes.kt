@@ -14,4 +14,3 @@ sealed class NavRoutes(val route: String, val title: Int, val icon: Int? = null)
     object MyLibrary : NavRoutes("my_library", R.string.my_library, R.drawable.book)
     object Profile : NavRoutes("profile", R.string.profile, R.drawable.person)
 }
-
