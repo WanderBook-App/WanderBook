@@ -1,6 +1,7 @@
 package com.example.wanderbook.presentation.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,15 +39,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.wanderbook.R
+import com.example.wanderbook.navigation.NavRoutes
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
 import com.example.wanderbook.ui.theme.Blue
 import com.example.wanderbook.ui.theme.Geologica
 
 
 @Composable
-@Preview(showBackground = true, device = "id:pixel_7_pro", showSystemUi = true)
-fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
+fun BooksInCityScreen(navController: NavHostController, viewModel: BooksViewModel = viewModel()) {
+    val books = viewModel.books
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -97,7 +101,7 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
             thickness = 1.dp,
             color = Color.Gray
         )
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(15.dp))
         Row(
             modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -122,17 +126,18 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
 
             )
         Spacer(modifier = Modifier.size(5.dp))
-        val bookCovers: List<Int> = listOf(R.drawable.book1, R.drawable.book2, R.drawable.book3, R.drawable.book4)
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
-            items(bookCovers) { cover ->
+            items(books) { book ->
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).clickable {
+                        navController.navigate(NavRoutes.BookDetails.route + "/${book.id}")
+                    }
                 ) {
                     Image(
-                        painter = painterResource(id = cover),
+                        painter = painterResource(id = book.coverResId),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -142,7 +147,7 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
                 }
             }
         }
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(15.dp))
         Row(
             modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -156,7 +161,8 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "icon",
-                modifier = Modifier.size(35.dp)
+                modifier = Modifier.size(35.dp),
+                tint = Blue
             )
         }
         Text(text = "Самые просматриваемые книги",
@@ -167,15 +173,17 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
         )
         Spacer(modifier = Modifier.size(5.dp))
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
-            items(bookCovers) { cover ->
+            items(books) { book ->
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).clickable {
+                        navController.navigate(NavRoutes.BookDetails.route + "/${book.id}")
+                    }
                 ) {
                     Image(
-                        painter = painterResource(id = cover),
+                        painter = painterResource(id = book.coverResId),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -185,7 +193,7 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
                 }
             }
         }
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(15.dp))
         Row(
             modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -210,15 +218,17 @@ fun BooksInCityScreen(viewModel: BooksViewModel = viewModel()) {
         )
         Spacer(modifier = Modifier.size(5.dp))
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
-            items(bookCovers) { cover ->
+            items(books) { book ->
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).clickable {
+                        navController.navigate(NavRoutes.BookDetails.route + "/${book.id}")
+                    }
                 ) {
                     Image(
-                        painter = painterResource(id = cover),
+                        painter = painterResource(id = book.coverResId),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

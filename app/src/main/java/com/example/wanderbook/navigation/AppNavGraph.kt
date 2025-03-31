@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
 import com.example.wanderbook.presentation.ui.screens.LoginScreen
@@ -24,8 +27,8 @@ import com.example.wanderbook.presentation.viewmodel.AuthViewModel
 @Composable
 fun AppNavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
     val isAuthenticated by authViewModel.isAuthenticated
-
-    if (isAuthenticated) {
+    val isRegisrtered by authViewModel.isRegistered
+    if (isAuthenticated || isRegisrtered) {
         MainGraph(navController)
     } else {
         AuthGraph(navController, authViewModel)
@@ -50,12 +53,12 @@ fun AuthGraph(navController: NavHostController, authViewModel: AuthViewModel) {
         }
         composable(NavRoutes.Login.route) {
             LoginScreen(authViewModel) {
-                authViewModel.login("user", "pass") // Симуляция входа
+                authViewModel.login("email", "pass") { } // Симуляция входа
             }
         }
         composable(NavRoutes.Register.route) {
             RegistrationScreen(authViewModel) {
-                authViewModel.login("new_user", "new_pass") // Симуляция входа
+                authViewModel.register("new_user", "new_email","pass") { }// Симуляция входа
             }
         }
     }
@@ -63,8 +66,12 @@ fun AuthGraph(navController: NavHostController, authViewModel: AuthViewModel) {
 
 @Composable
 fun MainGraph(navController: NavHostController) {
+    val currentRoute = remember { mutableStateOf("") }
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) },
+        bottomBar = {
+            if (currentRoute.value != NavRoutes.BookDetails.route) {
+            BottomNavigationBar(navController)
+        } },
         topBar = {  }
     ) { innerPadding ->
         NavHost(
@@ -72,10 +79,29 @@ fun MainGraph(navController: NavHostController) {
             startDestination = NavRoutes.BooksInCity.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(NavRoutes.BooksInCity.route) { BooksInCityScreen() }
-            composable(NavRoutes.BooksNearby.route) { BooksNearbyScreen() }
-            composable(NavRoutes.MyLibrary.route) { MyLibraryScreen() }
-            composable(NavRoutes.Profile.route) { ProfileScreen() }
+            composable(NavRoutes.BooksInCity.route) {
+                currentRoute.value = NavRoutes.BooksInCity.route
+                BooksInCityScreen(navController)
+            }
+            composable(NavRoutes.BooksNearby.route) {
+                currentRoute.value = NavRoutes.BooksNearby.route
+                BooksNearbyScreen()
+            }
+            composable(NavRoutes.MyLibrary.route) {
+                currentRoute.value = NavRoutes.MyLibrary.route
+                MyLibraryScreen()
+            }
+            composable(NavRoutes.Profile.route) {
+                currentRoute.value = NavRoutes.Profile.route
+                ProfileScreen()
+            }
+            composable(NavRoutes.BookDetails.route + "/{bookId}") { backStackEntry ->
+                currentRoute.value = NavRoutes.BookDetails.route
+                val bookId = backStackEntry.arguments?.getString("bookId")?.toIntOrNull()
+                if (bookId != null) {
+                    BookDetailsScreen(bookId, navController)
+                }
+            }
         }
     }
 }

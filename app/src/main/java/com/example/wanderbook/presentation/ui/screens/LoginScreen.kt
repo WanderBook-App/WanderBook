@@ -22,35 +22,47 @@ import com.example.wanderbook.presentation.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(authViewModel: AuthViewModel, onLoginSuccess: () -> Unit) {
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
 
     val isAuthenticated = authViewModel.isAuthenticated.value
 
     if (isAuthenticated) {
         onLoginSuccess()
     }
-
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") }
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Почта") }
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Пароль") },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { authViewModel.login(username, password) }) {
-            Text("Log In")
+        Button(onClick = {
+            authViewModel.login(email, password) { success ->
+                message = if (success) {
+                    onLoginSuccess()
+                    "Вход успешен!"
+                } else {
+                    "Ошибка: неверные данные"
+                }
+            }
+        }) {
+            Text("Войти")
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(message)
     }
 }
 
