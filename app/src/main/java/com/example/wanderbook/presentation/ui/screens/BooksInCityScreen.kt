@@ -35,17 +35,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.wanderbook.R
 import com.example.wanderbook.navigation.NavRoutes
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
-import com.example.wanderbook.ui.theme.Blue
-import com.example.wanderbook.ui.theme.Geologica
+import com.example.wanderbook.presentation.ui.theme.Blue
+import com.example.wanderbook.presentation.ui.theme.Geologica
 
 
 @Composable

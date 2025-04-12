@@ -1,4 +1,4 @@
-package com.example.wanderbook.ui.theme
+package com.example.wanderbook.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

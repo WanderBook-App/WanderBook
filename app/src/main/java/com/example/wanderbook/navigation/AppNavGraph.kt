@@ -16,27 +16,25 @@ import androidx.navigation.compose.composable
 import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
-import com.example.wanderbook.presentation.ui.screens.LoginScreen
 import com.example.wanderbook.presentation.ui.screens.MyLibraryScreen
 import com.example.wanderbook.presentation.ui.screens.ProfileScreen
-import com.example.wanderbook.presentation.ui.screens.RegistrationScreen
 import com.example.wanderbook.presentation.ui.screens.StartScreen
-import com.example.wanderbook.presentation.viewmodel.AuthViewModel
+import com.example.wanderbook.presentation.viewmodel.StartViewModel
 
 
 @Composable
-fun AppNavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
-    val isAuthenticated by authViewModel.isAuthenticated
-    val isRegisrtered by authViewModel.isRegistered
+fun AppNavGraph(navController: NavHostController, startViewModel: StartViewModel) {
+    val isAuthenticated by startViewModel.isAuthenticated
+    val isRegisrtered by startViewModel.isRegistered
     if (isAuthenticated || isRegisrtered) {
         MainGraph(navController)
     } else {
-        AuthGraph(navController, authViewModel)
+        AuthGraph(navController, startViewModel)
     }
 }
 
 @Composable
-fun AuthGraph(navController: NavHostController, authViewModel: AuthViewModel) {
+fun AuthGraph(navController: NavHostController, startViewModel: StartViewModel) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Start.route,
@@ -47,19 +45,9 @@ fun AuthGraph(navController: NavHostController, authViewModel: AuthViewModel) {
     ) {
         composable(NavRoutes.Start.route) {
             StartScreen(
-                onLoginClick = { navController.navigate(NavRoutes.Login.route) },
-                onRegisterClick = { navController.navigate(NavRoutes.Register.route) }
+                onLoginClick = { startViewModel.auth() },
+                onRegisterClick = { startViewModel.auth() }
             )
-        }
-        composable(NavRoutes.Login.route) {
-            LoginScreen(authViewModel) {
-                authViewModel.login("email", "pass") { } // Симуляция входа
-            }
-        }
-        composable(NavRoutes.Register.route) {
-            RegistrationScreen(authViewModel) {
-                authViewModel.register("new_user", "new_email","pass") { }// Симуляция входа
-            }
         }
     }
 }

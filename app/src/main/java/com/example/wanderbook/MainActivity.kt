@@ -7,7 +7,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.wanderbook.navigation.AppNavGraph
-import com.example.wanderbook.presentation.viewmodel.AuthViewModel
+import com.example.wanderbook.presentation.viewmodel.StartViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -15,9 +15,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
-            val authViewModel: AuthViewModel = viewModel()
+            val startViewModel: StartViewModel = viewModel()
             val navController = rememberNavController()
-            AppNavGraph(navController, authViewModel)
+            AppNavGraph(navController, startViewModel)
         }
     }
 }

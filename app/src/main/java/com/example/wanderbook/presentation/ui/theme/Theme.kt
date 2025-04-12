@@ -1,4 +1,4 @@
-package com.example.wanderbook.ui.theme
+package com.example.wanderbook.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -36,19 +35,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.wanderbook.R
-import com.example.wanderbook.model.Book
-import com.example.wanderbook.navigation.NavRoutes
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
-import com.example.wanderbook.ui.theme.AnotherBlue
-import com.example.wanderbook.ui.theme.Blue
-import com.example.wanderbook.ui.theme.Geologica
-import com.example.wanderbook.ui.theme.Gray
+import com.example.wanderbook.presentation.ui.theme.AnotherBlue
+import com.example.wanderbook.presentation.ui.theme.Blue
+import com.example.wanderbook.presentation.ui.theme.Geologica
+import com.example.wanderbook.presentation.ui.theme.Gray
 
 @Composable
 fun BookDetailsScreen(bookId: Int, navController: NavHostController, viewModel: BooksViewModel = viewModel()) {
@@ -72,7 +68,6 @@ fun BookDetailsScreen(bookId: Int, navController: NavHostController, viewModel: 
                     tint = Blue
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier.fillMaxWidth(),
