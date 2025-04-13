@@ -2,4 +2,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.devtoolsKsp)
+    //id("com.android.application") version "8.6.0" apply false
+
 }
