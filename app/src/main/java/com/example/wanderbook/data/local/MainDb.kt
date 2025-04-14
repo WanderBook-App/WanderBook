@@ -1,10 +1,9 @@
-package com.example.wanderbook
+package com.example.wanderbook.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlin.coroutines.coroutineContext
 
 @Database (entities = [UserDb::class, Book::class, UsersBooks::class], version = 1)
 abstract class MainDb: RoomDatabase() {

@@ -1,4 +1,4 @@
-package com.example.wanderbook
+package com.example.wanderbook.data.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

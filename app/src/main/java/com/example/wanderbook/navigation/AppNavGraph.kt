@@ -17,7 +17,7 @@ import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
 import com.example.wanderbook.presentation.ui.screens.MyLibraryScreen
-import com.example.wanderbook.presentation.ui.screens.ProfileScreen
+import com.example.wanderbook.presentation.ui.screens.MyProfileScreen
 import com.example.wanderbook.presentation.ui.screens.StartScreen
 import com.example.wanderbook.presentation.viewmodel.StartViewModel
 
@@ -81,7 +81,7 @@ fun MainGraph(navController: NavHostController) {
             }
             composable(NavRoutes.Profile.route) {
                 currentRoute.value = NavRoutes.Profile.route
-                ProfileScreen()
+                MyProfileScreen()
             }
             composable(NavRoutes.BookDetails.route + "/{bookId}") { backStackEntry ->
                 currentRoute.value = NavRoutes.BookDetails.route

@@ -1,4 +1,4 @@
-package com.example.wanderbook
+package com.example.wanderbook.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
