@@ -25,7 +25,7 @@ import com.example.wanderbook.navigation.NavRoutes
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(NavRoutes.BooksInCity, NavRoutes.BooksNearby, NavRoutes.MyLibrary, NavRoutes.Profile)
+    val items = listOf(NavRoutes.BooksInCity, NavRoutes.BooksNearby, NavRoutes.Chats, NavRoutes.Profile)
 
     val currentRoute by navController.currentBackStackEntryAsState()
 

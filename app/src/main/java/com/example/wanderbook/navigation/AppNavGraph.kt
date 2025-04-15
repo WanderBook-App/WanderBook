@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
-import com.example.wanderbook.presentation.ui.screens.MyLibraryScreen
+import com.example.wanderbook.presentation.ui.screens.MyChatsScreen
 import com.example.wanderbook.presentation.ui.screens.MyProfileScreen
 import com.example.wanderbook.presentation.ui.screens.StartScreen
 import com.example.wanderbook.presentation.viewmodel.StartViewModel
@@ -75,13 +75,13 @@ fun MainGraph(navController: NavHostController) {
                 currentRoute.value = NavRoutes.BooksNearby.route
                 BooksNearbyScreen()
             }
-            composable(NavRoutes.MyLibrary.route) {
-                currentRoute.value = NavRoutes.MyLibrary.route
-                MyLibraryScreen()
-            }
             composable(NavRoutes.Profile.route) {
                 currentRoute.value = NavRoutes.Profile.route
                 MyProfileScreen()
+            }
+            composable(NavRoutes.Chats.route) {
+                currentRoute.value = NavRoutes.Chats.route
+                MyChatsScreen()
             }
             composable(NavRoutes.BookDetails.route + "/{bookId}") { backStackEntry ->
                 currentRoute.value = NavRoutes.BookDetails.route
