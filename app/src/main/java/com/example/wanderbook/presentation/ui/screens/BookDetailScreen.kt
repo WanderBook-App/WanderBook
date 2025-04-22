@@ -26,11 +26,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,15 +42,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.wanderbook.R
+import com.example.wanderbook.data.local.AppDatabase
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
 import com.example.wanderbook.presentation.ui.theme.AnotherBlue
 import com.example.wanderbook.presentation.ui.theme.Blue
 import com.example.wanderbook.presentation.ui.theme.Geologica
 import com.example.wanderbook.presentation.ui.theme.Gray
+import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
 
 @Composable
-fun BookDetailsScreen(bookId: Int, navController: NavHostController, viewModel: BooksViewModel = viewModel()) {
-    val book = viewModel.getBookById(bookId)
+fun BookDetailsScreen(bookId: Int, navController: NavHostController) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val viewModel: BooksViewModel = viewModel(
+        factory = BooksViewModelFactory(db.bookDao())
+    )
+    val book = viewModel.getBookById(bookId.toString())
     book?.let {
         Column(
             modifier = Modifier
@@ -80,7 +89,7 @@ fun BookDetailsScreen(bookId: Int, navController: NavHostController, viewModel: 
                     modifier = Modifier.wrapContentSize()
                 ) {
                     Image(
-                        painter = painterResource(id = it.coverResId),
+                        painter = painterResource(id = R.drawable.book1),
                         contentDescription = "Обложка книги",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

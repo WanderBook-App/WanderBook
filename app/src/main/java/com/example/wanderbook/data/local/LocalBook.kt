@@ -9,6 +9,8 @@ data class LocalBook(
     @PrimaryKey val id: String, // UUID
     val title: String,
     val author: String,
+    val genre: String,
+    val condition: String,
     val description: String,
     val coverUrl: String,
     val isFavorite: Boolean = false,

@@ -21,10 +21,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,15 +35,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wanderbook.R
+import com.example.wanderbook.data.local.AppDatabase
 import com.example.wanderbook.presentation.ui.theme.AnotherBlue
 import com.example.wanderbook.presentation.ui.theme.Blue
 import com.example.wanderbook.presentation.ui.theme.Geologica
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
+import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
 
 @OptIn(ExperimentalAnimationApi::class)
 @Preview(showSystemUi = true, showBackground = true, device = "id:pixel_7_pro")
 @Composable
-fun MyChatsScreen(viewModel: BooksViewModel = viewModel()) {
+fun MyChatsScreen() {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val viewModel: BooksViewModel = viewModel(
+        factory = BooksViewModelFactory(db.bookDao())
+    )
     val chats = listOf("Дмитрий", "Лена", "Лалала")
     Column(modifier = Modifier.padding(15.dp)) {
         Text(

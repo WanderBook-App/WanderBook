@@ -26,11 +26,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -39,14 +41,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.wanderbook.R
 import com.example.wanderbook.navigation.NavRoutes
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
 import com.example.wanderbook.presentation.ui.theme.Blue
 import com.example.wanderbook.presentation.ui.theme.Geologica
+import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
+import com.example.wanderbook.data.local.AppDatabase
 
 
 @Composable
-fun BooksInCityScreen(navController: NavHostController, viewModel: BooksViewModel = viewModel()) {
+fun BooksInCityScreen(navController: NavHostController) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val viewModel: BooksViewModel = viewModel(
+        factory = BooksViewModelFactory(db.bookDao())
+    )
+
     val books = viewModel.books
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(
@@ -134,7 +145,7 @@ fun BooksInCityScreen(navController: NavHostController, viewModel: BooksViewMode
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = book.coverResId),
+                        painter = painterResource(id = R.drawable.book2),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -180,7 +191,7 @@ fun BooksInCityScreen(navController: NavHostController, viewModel: BooksViewMode
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = book.coverResId),
+                        painter = painterResource(id = R.drawable.book3),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -225,7 +236,7 @@ fun BooksInCityScreen(navController: NavHostController, viewModel: BooksViewMode
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = book.coverResId),
+                        painter = painterResource(id = R.drawable.book4),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

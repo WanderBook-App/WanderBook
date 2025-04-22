@@ -40,12 +40,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wanderbook.R
+import com.example.wanderbook.data.local.AppDatabase
 import com.example.wanderbook.presentation.ui.theme.AnotherBlue
 import com.example.wanderbook.presentation.ui.theme.Blue
 import com.example.wanderbook.presentation.ui.theme.Geologica
@@ -62,11 +65,17 @@ import com.example.wanderbook.presentation.ui.theme.Gray
 import com.example.wanderbook.presentation.ui.theme.Red
 import com.example.wanderbook.presentation.ui.theme.Yellow
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
+import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 @Preview(showSystemUi = true, showBackground = true, device = "id:pixel_7_pro")
-fun MyProfileScreen(viewModel: BooksViewModel = viewModel()) {
+fun MyProfileScreen() {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val viewModel: BooksViewModel = viewModel(
+        factory = BooksViewModelFactory(db.bookDao())
+    )
     val showFavorites by viewModel.showFavorites
     val myBooks = viewModel.myBooks
     val favBooks = viewModel.favBooks
@@ -191,7 +200,7 @@ fun MyProfileScreen(viewModel: BooksViewModel = viewModel()) {
                                     }
                                 ) {
                                     Image(
-                                        painter = painterResource(id = book.coverResId),
+                                        painter = painterResource(id = R.drawable.book4),
                                         contentDescription = "Book Cover",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
@@ -273,7 +282,7 @@ fun MyProfileScreen(viewModel: BooksViewModel = viewModel()) {
                                     }
                                 ) {
                                     Image(
-                                        painter = painterResource(id = book.coverResId),
+                                        painter = painterResource(id = R.drawable.book4),
                                         contentDescription = "Book Cover",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
