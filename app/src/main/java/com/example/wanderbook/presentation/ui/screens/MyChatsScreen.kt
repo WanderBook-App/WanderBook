@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.wanderbook.R
 import com.example.wanderbook.data.local.AppDatabase
 import com.example.wanderbook.presentation.ui.theme.AnotherBlue
@@ -41,17 +42,30 @@ import com.example.wanderbook.presentation.ui.theme.Blue
 import com.example.wanderbook.presentation.ui.theme.Geologica
 import com.example.wanderbook.presentation.viewmodel.BooksViewModel
 import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
+import com.example.wanderbook.presentation.viewmodel.ChatsViewModel
+import com.example.wanderbook.presentation.viewmodel.ChatsViewModelFactory
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
+
 
 @OptIn(ExperimentalAnimationApi::class)
-@Preview(showSystemUi = true, showBackground = true, device = "id:pixel_7_pro")
+//@Preview(showSystemUi = true, showBackground = true, device = "id:pixel_7_pro")
 @Composable
-fun MyChatsScreen() {
+fun MyChatsScreen(navController: NavHostController) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
-    val viewModel: BooksViewModel = viewModel(
-        factory = BooksViewModelFactory(db.bookDao())
+    val viewModel: ChatsViewModel = viewModel(
+        factory = ChatsViewModelFactory(db.chatDao())
     )
-    val chats = listOf("Дмитрий", "Лена", "Лалала")
+    val chatsViewModel: ChatsViewModel = viewModel(
+        factory = ChatsViewModelFactory(db.chatDao())
+    )
+
+    val chats by chatsViewModel.chats.collectAsState()
+
+
+    //val chats = listOf("Дмитрий", "Лена", "Лалала")
     Column(modifier = Modifier.padding(15.dp)) {
         Text(
             text = "Чаты",
@@ -89,13 +103,13 @@ fun MyChatsScreen() {
                                 verticalAlignment = Alignment.Bottom
                             ) {
                                 Text(
-                                    text = chat,
+                                    text = "Пользователь: ${chat.user2Id}",
                                     color = Blue,
                                     fontSize = 25.sp,
                                     style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Normal)
                                 )
                                 Text(
-                                    text = "Война и мир",
+                                    text = "Книга", // сюда нужно будет потом подтягивать книгу
                                     color = Blue,
                                     fontSize = 20.sp,
                                     style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Normal)
@@ -103,12 +117,11 @@ fun MyChatsScreen() {
                             }
                             Spacer(modifier = Modifier.height(7.dp))
                             Text(
-                                text = "Ты так как?",
+                                text = chat.lastMessage,
                                 color = Blue,
                                 fontSize = 20.sp,
                                 style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Thin)
                             )
-
                         }
                     }
                 }

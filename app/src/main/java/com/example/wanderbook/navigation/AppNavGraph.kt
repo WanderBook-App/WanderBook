@@ -81,7 +81,7 @@ fun MainGraph(navController: NavHostController) {
             }
             composable(NavRoutes.Chats.route) {
                 currentRoute.value = NavRoutes.Chats.route
-                MyChatsScreen()
+                MyChatsScreen(navController)
             }
             composable(NavRoutes.BookDetails.route + "/{bookId}") { backStackEntry ->
                 currentRoute.value = NavRoutes.BookDetails.route
