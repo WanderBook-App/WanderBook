@@ -95,23 +95,11 @@ class StartViewModel : ViewModel() {
 
     fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-//            Log.d("LoginDebug", " Отправка запроса на сервер: $email / $password")
-//            try {
-//                val response = RetrofitInstance.api.login(LoginRequest(email, password))
-//                if (response.isSuccessful) {
-//                    _isAuthenticated.value = true
-//                    onResult(true)
-//                } else {
-//                    onResult(false)
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                onResult(false)
-//            }
+
             Log.d("LoginDebug", " Отправка запроса на сервер: $email / $password")
             try {
                 val response = RetrofitInstance.api.login(LoginRequest(email, password))
-                Log.d("LoginDebug", "Ответ сервера: ${response.code()} - ${response.body()}")
+                Log.d("LoginDebug", "Ответ сервера: ${response.code()} - ${response.body()?.access_token}")
 
                 if (response.isSuccessful) {
                     _isAuthenticated.value = true
