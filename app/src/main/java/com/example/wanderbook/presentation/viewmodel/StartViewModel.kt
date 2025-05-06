@@ -7,12 +7,22 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.wanderbook.model.User
 
+import androidx.lifecycle.viewModelScope
+import com.example.wanderbook.model.LoginRequest
+import com.example.wanderbook.data.local.remote.RetrofitInstance
+import kotlinx.coroutines.launch
+
+import android.util.Log
+
 
 class StartViewModel : ViewModel() {
     private val _isAuthenticated = mutableStateOf(false)
     private val _isRegistered = mutableStateOf(false)
     val isAuthenticated: State<Boolean> = _isAuthenticated
     val isRegistered: State<Boolean> = _isRegistered
+
+    private val _loginError = mutableStateOf<String?>(null)
+    val loginError: State<String?> = _loginError
 
     private val _isLogin = mutableStateOf(false)
     val isLogin: State<Boolean> = _isLogin
@@ -82,8 +92,43 @@ class StartViewModel : ViewModel() {
         }
     }
 
+
     fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
-        val user = users.find { it.email == email && it.password == password }
+        viewModelScope.launch {
+//            Log.d("LoginDebug", " Отправка запроса на сервер: $email / $password")
+//            try {
+//                val response = RetrofitInstance.api.login(LoginRequest(email, password))
+//                if (response.isSuccessful) {
+//                    _isAuthenticated.value = true
+//                    onResult(true)
+//                } else {
+//                    onResult(false)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                onResult(false)
+//            }
+            Log.d("LoginDebug", " Отправка запроса на сервер: $email / $password")
+            try {
+                val response = RetrofitInstance.api.login(LoginRequest(email, password))
+                Log.d("LoginDebug", "Ответ сервера: ${response.code()} - ${response.body()}")
+
+                if (response.isSuccessful) {
+                    _isAuthenticated.value = true
+                    _loginError.value = null
+                    onResult(true)
+                } else {
+                    _loginError.value = "Неверный логин или пароль"
+                    Log.w("LoginDebug", " Ошибка авторизации: ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("LoginError", " Ошибка при выполнении запроса: ${e.message}")
+                _loginError.value = "Ошибка подключения к серверу"
+                onResult(false)
+            }
+        }
     }
 }
 

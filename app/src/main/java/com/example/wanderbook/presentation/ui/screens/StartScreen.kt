@@ -308,10 +308,21 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
+//                        onClick = {
+//                            viewModel.login(viewModel.email, viewModel.password) {}
+//                            onLoginClick()
+//                                  },
                         onClick = {
-                            viewModel.login(viewModel.email, viewModel.password) {}
-                            onLoginClick()
-                                  },
+                            viewModel.login(viewModel.email, viewModel.password) { success ->
+                                if (success) {
+                                    onLoginClick()
+                                }
+//                                else {
+//
+//                                    Toast.makeText(context, "Неверный логин или пароль", Toast.LENGTH_SHORT).show()
+//                                }
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         shape = RoundedCornerShape(8.dp),
