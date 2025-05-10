@@ -33,6 +33,21 @@ class StartViewModel : ViewModel() {
     private val _isVisible = mutableStateOf(false)
     val isVisible: State<Boolean> = _isVisible
 
+    var code by mutableStateOf("")
+        private set
+
+    fun onCodeChange(newCode: String) {
+        code = newCode
+    }
+
+    var isCodeSent = mutableStateOf(false)
+        private set
+
+    fun onCodeSent() {
+        isCodeSent.value = true
+    }
+
+
     fun setVisible() {
         _isVisible.value = true
     }

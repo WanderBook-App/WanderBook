@@ -1,14 +1,12 @@
 package com.example.wanderbook.presentation.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,9 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,6 +54,7 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
     val isRegistr by viewModel.isRegistr
     val isLogin by viewModel.isLogin
 
+    val isCodeSent by viewModel.isCodeSent
     val imageSize by animateDpAsState(targetValue = if (isRegistr || isLogin) 200.dp else 320.dp)
     val textSize by animateFloatAsState(targetValue = if (isRegistr || isLogin) 30f else 45f)
     LaunchedEffect(Unit) {
@@ -66,7 +62,14 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
         viewModel.setVisible()
     }
     val upAnimationOffset by animateIntOffsetAsState(targetValue = if (isVisible) IntOffset(0, 0) else IntOffset(0, 650))
-    val heightAnimation by animateDpAsState(targetValue = if (isRegistr) 1000.dp else if (isLogin) 350.dp else 185.dp)
+    val heightAnimation by animateDpAsState(
+        targetValue = when {
+            isCodeSent -> 320.dp
+            isRegistr -> 1000.dp
+            isLogin -> 350.dp
+            else -> 185.dp
+        }
+    )
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,7 +99,7 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
             colors = CardDefaults.cardColors(containerColor = AnotherBlue)
         ) {
             Spacer(modifier = Modifier.height(10.dp))
-            AnimatedVisibility(!isLogin && !isRegistr) {
+            AnimatedVisibility(!isLogin && !isRegistr && !isCodeSent) {
                 Column(
                     modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -225,9 +228,9 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
-                            viewModel.register(viewModel.name, viewModel.email, viewModel.password) {}
-                            onRegisterClick()
-                                  },
+                            viewModel.onRegisterButtonClick()
+                            viewModel.onCodeSent()
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         shape = RoundedCornerShape(8.dp),
@@ -257,6 +260,58 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     }
                 }
             }
+            AnimatedVisibility(isCodeSent) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 20.dp, start = 20.dp, bottom = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Введите код из письма",
+                        fontSize = 28.sp,
+                        style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Medium),
+                        color = Color.White,
+                        modifier = Modifier.padding(bottom = 10.dp, top = 10.dp)
+                    )
+                    OutlinedTextField(
+                        value = viewModel.code,
+                        onValueChange = { viewModel.onCodeChange(it) },
+                        label = { Text("Код") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White,
+                            unfocusedTextColor = Color.Black,
+                            focusedTextColor = Color.Black,
+                            unfocusedLabelColor = Color.Gray,
+                            focusedLabelColor = Color.Gray,
+                            unfocusedBorderColor = Color.White,
+                            focusedBorderColor = Color.White,
+                            disabledBorderColor = Color.White,
+                            errorBorderColor = Color.Red
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        onClick = {
+                            onRegisterClick() // просто переход дальше
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                        shape = RoundedCornerShape(8.dp),
+                        elevation = ButtonDefaults.buttonElevation(4.dp)
+                    ) {
+                        Text(
+                            text = "Подтвердить",
+                            fontSize = 22.sp,
+                            color = Blue
+                        )
+                    }
+                }
+            }
+
             AnimatedVisibility(isLogin) {
                 Column(
                     modifier = Modifier

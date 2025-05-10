@@ -20,6 +20,7 @@ import com.example.wanderbook.presentation.ui.screens.MyChatsScreen
 import com.example.wanderbook.presentation.ui.screens.MyProfileScreen
 import com.example.wanderbook.presentation.ui.screens.StartScreen
 import com.example.wanderbook.presentation.viewmodel.StartViewModel
+import com.example.wanderbook.presentation.ui.screens.ChatScreen
 
 
 @Composable
@@ -57,7 +58,7 @@ fun MainGraph(navController: NavHostController) {
     val currentRoute = remember { mutableStateOf("") }
     Scaffold(
         bottomBar = {
-            if (currentRoute.value != NavRoutes.BookDetails.route) {
+            if (currentRoute.value != NavRoutes.BookDetails.route && currentRoute.value != "chat/{chatId}") {
             BottomNavigationBar(navController)
         } },
         topBar = {  }
@@ -90,6 +91,14 @@ fun MainGraph(navController: NavHostController) {
                     BookDetailsScreen(bookId, navController)
                 }
             }
+            composable("chat/{chatId}") { backStackEntry ->
+                currentRoute.value = "chat/{chatId}"
+                val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
+                ChatScreen(navController = navController, chatId = chatId)
+            }
+
+
+
         }
     }
 }
