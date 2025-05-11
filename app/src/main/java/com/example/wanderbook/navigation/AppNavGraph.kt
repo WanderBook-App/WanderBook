@@ -10,9 +10,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.wanderbook.data.local.AppDatabase
 import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
@@ -91,10 +93,36 @@ fun MainGraph(navController: NavHostController) {
                     BookDetailsScreen(bookId, navController)
                 }
             }
+//            composable("chat/{chatId}") { backStackEntry ->
+//                currentRoute.value = "chat/{chatId}"
+//                val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
+//                ChatScreen(navController = navController, chatId = chatId)
+//            }
             composable("chat/{chatId}") { backStackEntry ->
                 currentRoute.value = "chat/{chatId}"
                 val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
-                ChatScreen(navController = navController, chatId = chatId)
+
+                // Получаем контекст
+                val context = LocalContext.current
+
+                // Инициализируем базу данных
+                val database = remember { AppDatabase.getDatabase(context) }
+
+                // DAO
+                val chatDao = database.chatDao()
+                val messageDao = database.messageDao()
+
+                // Пример senderId
+                val senderId = "user123"
+
+                // Передаём все нужные параметры
+                ChatScreen(
+                    navController = navController,
+                    chatId = chatId,
+                    senderId = senderId,
+                    chatDao = chatDao,
+                    messageDao = messageDao
+                )
             }
 
 

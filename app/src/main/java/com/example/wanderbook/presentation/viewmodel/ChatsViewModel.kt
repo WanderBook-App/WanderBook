@@ -5,16 +5,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wanderbook.data.local.ChatDao
 import com.example.wanderbook.data.local.LocalChat
+import com.example.wanderbook.data.local.LocalMessage
+import com.example.wanderbook.data.local.MessageDao
 import com.example.wanderbook.model.Message
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ChatsViewModel(private val chatDao: ChatDao) : ViewModel() {
+class ChatsViewModel(
+    private val chatDao: ChatDao,
+    private val messageDao: MessageDao
+) : ViewModel() {
 
     private val _chats = MutableStateFlow<List<LocalChat>>(emptyList())
     val chats: StateFlow<List<LocalChat>> = _chats
+
+    private val _messages = MutableStateFlow<List<LocalMessage>>(emptyList())
+    val messages: StateFlow<List<LocalMessage>> = _messages
 
     init {
         loadChats()
@@ -25,27 +33,27 @@ class ChatsViewModel(private val chatDao: ChatDao) : ViewModel() {
             _chats.value = chatDao.getAllChats()
         }
     }
-}
 
-class FakeChatsViewModel : ViewModel() {
-    private val _messages = MutableStateFlow<List<Message>>(
-        listOf(
-            Message("1", "Привет!", isSentByMe = false),
-            Message("2", "Привет, как дела?", isSentByMe = true),
-            Message("3", "Всё отлично, спасибо!", isSentByMe = false),
+    fun loadMessagesForChat(chatId: String) {
+        viewModelScope.launch {
+            _messages.value = messageDao.getMessagesForChat(chatId)
+        }
+    }
+
+    fun sendMessage(chatId: String, senderId: String, text: String) {
+        if (text.isBlank()) return
+
+        val message = LocalMessage(
+            id = UUID.randomUUID().toString(),
+            chatId = chatId,
+            senderId = senderId,
+            text = text,
+            sentAt = System.currentTimeMillis()
         )
-    )
-    val messages: StateFlow<List<Message>> = _messages
 
-    fun sendMessage(text: String) {
-        if (text.isNotBlank()) {
-            val newMessage = Message(
-                id = UUID.randomUUID().toString(),
-                text = text,
-                timestamp = System.currentTimeMillis(),
-                isSentByMe = true
-            )
-            _messages.value = _messages.value + newMessage
+        viewModelScope.launch {
+            messageDao.insertMessage(message)
+            loadMessagesForChat(chatId) // обновляем список
         }
     }
 }

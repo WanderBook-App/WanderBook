@@ -36,17 +36,33 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.wanderbook.presentation.viewmodel.FakeChatsViewModel
+import com.example.wanderbook.data.local.ChatDao
+import com.example.wanderbook.data.local.MessageDao
+import com.example.wanderbook.presentation.viewmodel.ChatsViewModel
+import com.example.wanderbook.presentation.viewmodel.MessageViewModelFactory
+import androidx.compose.runtime.LaunchedEffect
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     navController: NavHostController,
-    viewModel: FakeChatsViewModel = viewModel(),
-    chatId: String
+    chatId: String,
+    senderId: String, // ID текущего пользователя
+    chatDao: ChatDao,
+    messageDao: MessageDao
 ) {
+    val viewModel: ChatsViewModel = viewModel(
+        factory = MessageViewModelFactory(chatDao, messageDao)
+    )
+    // Загружаем сообщения для этого чата
+    LaunchedEffect(chatId) {
+        viewModel.loadMessagesForChat(chatId)
+    }
     val messages by viewModel.messages.collectAsState()
     var text by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier
@@ -85,15 +101,16 @@ fun ChatScreen(
             reverseLayout = true
         ) {
             items(messages.reversed()) { message ->
-                val alignmentt = if (message.isSentByMe) Alignment.CenterEnd else Alignment.CenterStart
-                val background = if (message.isSentByMe) Blue else Color.LightGray
-                val textColor = if (message.isSentByMe) Color.White else Color.Black
+                val alignment = if (message.senderId == senderId) Alignment.CenterEnd else Alignment.CenterStart
+                val background = if (message.senderId == senderId) Blue else Color.LightGray
+                val textColor = if (message.senderId == senderId) Color.White else Color.Black
+
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp),
-                    contentAlignment = alignmentt
+                    contentAlignment = alignment
                 ) {
                     Text(
                         text = message.text,
@@ -123,7 +140,7 @@ fun ChatScreen(
                 )
             )
             IconButton(onClick = {
-                viewModel.sendMessage(text)
+                viewModel.sendMessage(chatId, senderId, text)
                 text = ""
             }) {
                 Icon(Icons.Default.Send, contentDescription = "Send", tint = Blue)

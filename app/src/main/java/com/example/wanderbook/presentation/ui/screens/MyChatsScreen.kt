@@ -52,11 +52,12 @@ import androidx.compose.runtime.getValue
 fun MyChatsScreen(navController: NavHostController) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
-    val viewModel: ChatsViewModel = viewModel(
-        factory = ChatsViewModelFactory(db.chatDao())
-    )
+
+    val chatDao = db.chatDao()
+    val messageDao = db.messageDao()
+
     val chatsViewModel: ChatsViewModel = viewModel(
-        factory = ChatsViewModelFactory(db.chatDao())
+        factory = ChatsViewModelFactory(chatDao, messageDao)
     )
 
     val chats by chatsViewModel.chats.collectAsState()
