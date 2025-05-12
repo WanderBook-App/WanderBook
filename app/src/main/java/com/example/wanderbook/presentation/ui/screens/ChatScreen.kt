@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -41,7 +42,7 @@ import com.example.wanderbook.data.local.MessageDao
 import com.example.wanderbook.presentation.viewmodel.ChatsViewModel
 import com.example.wanderbook.presentation.viewmodel.MessageViewModelFactory
 import androidx.compose.runtime.LaunchedEffect
-
+import androidx.compose.ui.text.input.KeyboardType
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,6 +136,9 @@ fun ChatScreen(
                 onValueChange = { text = it },
                 modifier = Modifier.weight(1f),
                 placeholder = { Text("Введите сообщение") },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text
+                ),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.White
                 )

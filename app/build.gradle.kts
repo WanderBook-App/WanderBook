@@ -63,6 +63,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")  // Для логирования запросов
 
 
+    implementation("com.auth0:java-jwt:3.18.2")
+    implementation("com.auth0.android:jwtdecode:2.0.0")
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.runtime.livedata)

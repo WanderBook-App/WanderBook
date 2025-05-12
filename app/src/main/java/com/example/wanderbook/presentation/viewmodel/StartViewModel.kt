@@ -1,5 +1,6 @@
 package com.example.wanderbook.presentation.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,9 +14,11 @@ import com.example.wanderbook.data.local.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import com.example.wanderbook.data.local.SharedPreferencesUtil
 
 
-class StartViewModel : ViewModel() {
+class StartViewModel(application: Application) : AndroidViewModel(application) {
     private val _isAuthenticated = mutableStateOf(false)
     private val _isRegistered = mutableStateOf(false)
     val isAuthenticated: State<Boolean> = _isAuthenticated
@@ -117,6 +120,11 @@ class StartViewModel : ViewModel() {
                 Log.d("LoginDebug", "Ответ сервера: ${response.code()} - ${response.body()?.access_token}")
 
                 if (response.isSuccessful) {
+                    val token = response.body()?.access_token
+                    if (token != null) {
+                        SharedPreferencesUtil.saveJwtToken(getApplication(), token)
+                    }
+
                     _isAuthenticated.value = true
                     _loginError.value = null
                     onResult(true)

@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.wanderbook.data.local.AppDatabase
+import com.example.wanderbook.data.local.SharedPreferencesUtil
 import com.example.wanderbook.presentation.ui.screens.BookDetailsScreen
 import com.example.wanderbook.presentation.ui.screens.BooksInCityScreen
 import com.example.wanderbook.presentation.ui.screens.BooksNearbyScreen
@@ -105,6 +106,12 @@ fun MainGraph(navController: NavHostController) {
                 // Получаем контекст
                 val context = LocalContext.current
 
+                // Получаем JWT токен из SharedPreferences
+                val token = SharedPreferencesUtil.getJwtToken(context)
+
+                // Извлекаем Id из токена
+                val senderId = SharedPreferencesUtil.getSenderIdFromToken(token) ?: ""  // Если токен не найден используем пустую строку
+
                 // Инициализируем базу данных
                 val database = remember { AppDatabase.getDatabase(context) }
 
@@ -112,8 +119,7 @@ fun MainGraph(navController: NavHostController) {
                 val chatDao = database.chatDao()
                 val messageDao = database.messageDao()
 
-                // Пример senderId
-                val senderId = "user123"
+
 
                 // Передаём все нужные параметры
                 ChatScreen(
