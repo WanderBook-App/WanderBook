@@ -228,8 +228,12 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
-                            viewModel.onRegisterButtonClick()
-                            viewModel.onCodeSent()
+                            viewModel.register(viewModel.name, viewModel.email, viewModel.password) { success ->
+                                if (success) {
+                                    viewModel.onCodeSent()
+                                }
+
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -245,7 +249,9 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
+
                             viewModel.onRegisterButtonClick()
+
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -296,7 +302,12 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
-                            onRegisterClick() // просто переход дальше
+                            viewModel.verifyEmail(viewModel.email, viewModel.code) { success ->
+                                if (success) {
+                                    onLoginClick()
+                                }
+
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -363,19 +374,12 @@ fun StartScreen(viewModel: StartViewModel = viewModel(), onLoginClick: () -> Uni
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
-//                        onClick = {
-//                            viewModel.login(viewModel.email, viewModel.password) {}
-//                            onLoginClick()
-//                                  },
+
                         onClick = {
                             viewModel.login(viewModel.email, viewModel.password) { success ->
                                 if (success) {
                                     onLoginClick()
                                 }
-//                                else {
-//
-//                                    Toast.makeText(context, "Неверный логин или пароль", Toast.LENGTH_SHORT).show()
-//                                }
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),

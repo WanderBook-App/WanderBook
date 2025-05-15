@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.wanderbook.data.local.SharedPreferencesUtil
+import com.example.wanderbook.model.RegisterRequest
+import com.example.wanderbook.model.VerificationRequest
+import com.example.wanderbook.model.VerificationResponse
 
 
 class StartViewModel(application: Application) : AndroidViewModel(application) {
@@ -48,6 +51,8 @@ class StartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onCodeSent() {
         isCodeSent.value = true
+        _isLogin.value = false
+        _isRegistr.value = false
     }
 
 
@@ -94,6 +99,7 @@ class StartViewModel(application: Application) : AndroidViewModel(application) {
     fun onRepeatPasswordChange(newRepeatPassword: String) {
         repeatPassword = newRepeatPassword
     }
+    private val authApi = RetrofitInstance.api
 
     // список пользователей
     private val users = mutableListOf<User>(
@@ -101,14 +107,60 @@ class StartViewModel(application: Application) : AndroidViewModel(application) {
         User("Dima", "dima@mail.ru", "123"),
     )
 
-    fun register(username: String, email: String, password: String, onResult: (Boolean) -> Unit) {
-        // Проверяем, есть ли уже пользователь с таким email
-        if (users.any { it.email == email }) {
-            onResult(false) // Email уже используется
-        } else {
-            users.add(User(username, email, password)) // Добавляем пользователЯ
+
+    fun register(username: String, email: String, password: String, onResult: (Boolean) -> Unit) { viewModelScope.launch {
+            Log.d("RegisterDebug", "Отправка запроса на сервер: username=$username, email=$email")
+            try {
+                val response = RetrofitInstance.api.register(RegisterRequest(username, email, password))
+                Log.d("RegisterDebug", "Ответ сервера: ${response.code()} - ${response.body()}")
+
+                if (response.isSuccessful) {
+                    _loginError.value = null
+                    onResult(true)
+                } else {
+                    _loginError.value = "Ошибка регистрации"
+                    Log.w("RegisterDebug", "Ошибка регистрации: ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("RegisterError", "Ошибка при выполнении запроса: ${e.message}")
+                _loginError.value = "Ошибка подключения к серверу"
+                onResult(false)
+            }
         }
     }
+
+
+    fun verifyEmail(email: String, code: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            Log.d("VerifyDebug", "Отправка запроса на сервер: email=$email, code=$code")
+            try {
+                val response = RetrofitInstance.api.verify(VerificationRequest(email, code))
+
+                Log.d("VerifyDebug", "Ответ сервера: ${response.code()} - ${response.body()}")
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("VerifyDebug", "Сообщение от сервера: ${response.body()?.message}")
+
+                    _isAuthenticated.value = true
+                    _loginError.value = null
+                    onResult(true)
+                } else {
+                    _loginError.value = "Неверный код подтверждения"
+                    Log.w("VerifyDebug", "Ошибка верификации: ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("VerifyError", "Ошибка при выполнении запроса: ${e.message}")
+                _loginError.value = "Ошибка подключения к серверу"
+                onResult(false)
+            }
+        }
+    }
+
 
 
     fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
