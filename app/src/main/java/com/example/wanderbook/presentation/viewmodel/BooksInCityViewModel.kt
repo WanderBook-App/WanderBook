@@ -27,10 +27,10 @@ class BooksViewModel(private val bookDao: BookDao) : ViewModel() {
     val books: List<LocalBook> get() = _books
 
     private val _myBooks = mutableStateListOf<LocalBook>()
-    val myBooks: List<LocalBook> get() = _myBooks
+    val myBooks: List<LocalBook> get() = _books // _myBooks
 
     private val _favBooks = mutableStateListOf<LocalBook>()
-    val favBooks: List<LocalBook> get() = _favBooks
+    val favBooks: List<LocalBook> get() = _books // _fav_books
 
     var selectedBook by mutableStateOf<Book?>(null)
         private set

@@ -165,7 +165,6 @@ class StartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-
             Log.d("LoginDebug", " Отправка запроса на сервер: $email / $password")
             try {
                 val response = RetrofitInstance.api.login(LoginRequest(email, password))

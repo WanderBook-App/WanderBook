@@ -12,4 +12,3 @@ data class LocalMessage(
     val sentAt: Long, // timestamp
     val isSynced: Boolean = false
 )
-

@@ -58,6 +58,12 @@ fun BookDetailsScreen(bookId: Int, navController: NavHostController) {
         factory = BooksViewModelFactory(db.bookDao())
     )
     val book = viewModel.getBookById(bookId.toString())
+    val coverMap = mapOf(
+        "book1.jpg" to R.drawable.book1,
+        "book2.jpg" to R.drawable.book2,
+        "book3.jpg" to R.drawable.book3,
+        "book4.jpg" to R.drawable.book4
+    )
     book?.let {
         Column(
             modifier = Modifier
@@ -78,6 +84,7 @@ fun BookDetailsScreen(bookId: Int, navController: NavHostController) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            val imageRes = coverMap[book.coverUrl] ?: R.drawable.book3
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -89,7 +96,7 @@ fun BookDetailsScreen(bookId: Int, navController: NavHostController) {
                     modifier = Modifier.wrapContentSize()
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.book1),
+                        painter = painterResource(id = imageRes),
                         contentDescription = "Обложка книги",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

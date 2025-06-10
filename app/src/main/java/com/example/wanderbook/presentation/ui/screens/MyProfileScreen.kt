@@ -69,7 +69,6 @@ import com.example.wanderbook.presentation.viewmodel.BooksViewModelFactory
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-@Preview(showSystemUi = true, showBackground = true, device = "id:pixel_7_pro")
 fun MyProfileScreen() {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
@@ -82,6 +81,24 @@ fun MyProfileScreen() {
     val offsetX by animateDpAsState(
         targetValue = if (showFavorites) 50.dp else 0.dp,
         label = "switchOffset"
+    )
+    val coverMap1 = mapOf(
+        "book1.jpg" to R.drawable.book1,
+        "book2.jpg" to R.drawable.book2,
+        "book3.jpg" to R.drawable.book3,
+        "book4.jpg" to R.drawable.book4,
+        "book5.jpg" to R.drawable.book5,
+        "book6.jpg" to R.drawable.book6,
+        "book7.jpg" to R.drawable.book7,
+    )
+    val coverMap2 = mapOf(
+        "book1.jpg" to R.drawable.book1,
+        "book2.jpg" to R.drawable.book2,
+        "book3.jpg" to R.drawable.book3,
+        "book4.jpg" to R.drawable.book4,
+        "book5.jpg" to R.drawable.book5,
+        "book6.jpg" to R.drawable.book6,
+        "book7.jpg" to R.drawable.book7,
     )
     val titleText = if (showFavorites) "Избранное" else "Мои книги"
     Column(
@@ -190,61 +207,64 @@ fun MyProfileScreen() {
                         modifier = Modifier.padding(start = 15.dp, end = 15.dp)
                     ) {
                         items(favBooks) { book ->
-                            Row() {
-                                Card(
-                                    shape = RoundedCornerShape(5.dp),
-                                    elevation = CardDefaults.elevatedCardElevation(8.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                                    modifier = Modifier.padding(end = 8.dp).clickable {
-                                        //navController.navigate(NavRoutes.BookDetails.route + "/${book.id}")
-                                    }
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.book4),
-                                        contentDescription = "Book Cover",
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(96.dp, 150.dp)
-                                            .clip(RoundedCornerShape(5.dp))
-                                    )
-                                }
-                                Column(
-                                    modifier = Modifier.height(150.dp)
-                                ) {
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    Text(
-                                        text = book.title,
-                                        color = Blue,
-                                        fontSize = 22.sp,
-                                        style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Normal)
-                                    )
-                                    Spacer(modifier = Modifier.height(5.dp))
-                                    Text(
-                                        text = book.author,
-                                        color = Gray,
-                                        fontSize = 17.sp,
-                                        style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Light)
-                                    )
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                            .clip(RoundedCornerShape(12.dp))
-                                            .border(4.dp, Red, RoundedCornerShape(12.dp))
-                                            .clickable { /* TODO: onClick */ }
-                                            .background(Color.White),
-                                        contentAlignment = Alignment.Center
+                            if (book.isFavorite) {
+                                val imageRes = coverMap1[book.coverUrl] ?: R.drawable.book2
+                                Row() {
+                                    Card(
+                                        shape = RoundedCornerShape(5.dp),
+                                        elevation = CardDefaults.elevatedCardElevation(8.dp),
+                                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                                        modifier = Modifier.padding(end = 8.dp).clickable {
+                                            //navController.navigate(NavRoutes.BookDetails.route + "/${book.id}")
+                                        }
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = "delete",
-                                            tint = Red,
-                                            modifier = Modifier.size(28.dp)
+                                        Image(
+                                            painter = painterResource(id = imageRes),
+                                            contentDescription = "Book Cover",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(96.dp, 150.dp)
+                                                .clip(RoundedCornerShape(5.dp))
                                         )
                                     }
+                                    Column(
+                                        modifier = Modifier.height(150.dp)
+                                    ) {
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                        Text(
+                                            text = book.title,
+                                            color = Blue,
+                                            fontSize = 22.sp,
+                                            style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Normal)
+                                        )
+                                        Spacer(modifier = Modifier.height(5.dp))
+                                        Text(
+                                            text = book.author,
+                                            color = Gray,
+                                            fontSize = 17.sp,
+                                            style = TextStyle(fontFamily = Geologica, fontWeight = FontWeight.Light)
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                                .clip(RoundedCornerShape(12.dp))
+                                                .border(4.dp, Red, RoundedCornerShape(12.dp))
+                                                .clickable { /* TODO: onClick */ }
+                                                .background(Color.White),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = "delete",
+                                                tint = Red,
+                                                modifier = Modifier.size(28.dp)
+                                            )
+                                        }
+                                    }
                                 }
+                                Spacer(modifier = Modifier.height(25.dp))
                             }
-                            Spacer(modifier = Modifier.height(25.dp))
                         }
                     }
                 } else {
@@ -271,7 +291,8 @@ fun MyProfileScreen() {
                     LazyColumn(
                         modifier = Modifier.padding(start = 15.dp, end = 15.dp)
                     ) {
-                        items(myBooks) { book ->
+                        items(myBooks.reversed()) { book ->
+                            val imageRes = coverMap2[book.coverUrl] ?: R.drawable.book2
                             Row() {
                                 Card(
                                     shape = RoundedCornerShape(5.dp),
@@ -282,7 +303,7 @@ fun MyProfileScreen() {
                                     }
                                 ) {
                                     Image(
-                                        painter = painterResource(id = R.drawable.book4),
+                                        painter = painterResource(id = imageRes),
                                         contentDescription = "Book Cover",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier

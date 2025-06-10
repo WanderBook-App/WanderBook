@@ -134,8 +134,18 @@ fun BooksInCityScreen(navController: NavHostController) {
 
             )
         Spacer(modifier = Modifier.size(5.dp))
+        val coverMap = mapOf(
+            "book1.jpg" to R.drawable.book1,
+            "book2.jpg" to R.drawable.book2,
+            "book3.jpg" to R.drawable.book3,
+            "book4.jpg" to R.drawable.book4,
+            "book5.jpg" to R.drawable.book5,
+            "book6.jpg" to R.drawable.book6,
+            "book7.jpg" to R.drawable.book7,
+        )
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
             items(books) { book ->
+                val imageRes = coverMap[book.coverUrl] ?: R.drawable.book2
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
@@ -145,7 +155,7 @@ fun BooksInCityScreen(navController: NavHostController) {
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.book2),
+                        painter = painterResource(id = imageRes),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -181,7 +191,8 @@ fun BooksInCityScreen(navController: NavHostController) {
         )
         Spacer(modifier = Modifier.size(5.dp))
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
-            items(books) { book ->
+            items(books.reversed()) { book ->
+                val imageRes = coverMap[book.coverUrl] ?: R.drawable.book2
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
@@ -191,7 +202,7 @@ fun BooksInCityScreen(navController: NavHostController) {
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.book3),
+                        painter = painterResource(id = imageRes),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -227,6 +238,7 @@ fun BooksInCityScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.size(5.dp))
         LazyRow(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
             items(books) { book ->
+                val imageRes = coverMap[book.coverUrl] ?: R.drawable.book2
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.elevatedCardElevation(8.dp),
@@ -236,7 +248,7 @@ fun BooksInCityScreen(navController: NavHostController) {
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.book4),
+                        painter = painterResource(id = imageRes),
                         contentDescription = "Book Cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
